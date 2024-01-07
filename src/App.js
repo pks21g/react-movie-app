@@ -3,7 +3,7 @@ import "./App.css";
 import searchIcon from "./search.svg";
 import MovieCard from "./MovieCard";
 
-const API_URL = "http://www.omdbapi.com/?apikey=2f7a6f39";
+const API_URL = "http://www.omdbapi.com/?i=tt3896198&apikey=2f7a6f39";
 
 const App = () => {
   const [movies, setMovies] = useState([]);
@@ -13,13 +13,27 @@ const App = () => {
     const response = await fetch(`${API_URL}&s=${title}`);
     const data = await response.json();
     setMovies(data.Search);
-    console.log(data.Search);
+    // console.log(data.Search);
   };
 
   useEffect(() => {
     searchMovies("");
   }, []); // empty array calls the useEffect only at start
 
+  useEffect(() =>{
+ 
+    const handleKey = (e) =>{
+      if (e.key === 'Enter'){
+        searchMovies(searchTerm)
+        console.log("clicked")
+      }
+
+    } 
+    document.addEventListener('keydown', handleKey)
+    return () =>  {
+      document.removeEventListener('keydown', handleKey)
+    }
+})
   return (
     <div className="app">
       <h1>MovieLand</h1>
@@ -31,16 +45,15 @@ const App = () => {
       </div>
       {movies?.length > 0 ? (
         <div className="container">
-          {movies.map((movie) => (
-            <MovieCard key={movie.Title} movie={movie} />
+          {movies.map((movie, index) => (
+            <MovieCard key={index} movie={movie} />
           ))}
         </div>
       ) : (
         <div className="empty">
-          <h2>No movies found</h2>
+          {/* <h2>No movies found</h2> */}
         </div>
       )}
-      <button type="button" onClick={ () => {}}>LOAD MORE</button>
     </div>
   );
 };
